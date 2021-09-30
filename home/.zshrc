@@ -1,4 +1,4 @@
-
+ZSH_THEME="robbyrussell"
 # === zsh Settings === }}}
  # completion
   autoload -U compinit
@@ -182,11 +182,11 @@ ltall() {
 }
 
 h3() {
-  (cd ~/Projects/workspace/hub3/scripts/h3_cli && bundle exec ruby main.rb $*)
+  (cd ~/Projects/hub3/scripts/h3_cli && bundle exec ruby main.rb $*)
 }
 
 h3sp() {
-  cd ~/Projects/workspace/hub3/spot_easy_website &&
+  cd ~/Projects/hub3/spot_easy_website &&
     tmux split-window -h -p 30 \; \
       send-keys -t 1 'bin/docker_web_server' Enter \; \
       split-window -v -p 60 \; \
@@ -236,3 +236,8 @@ armageddon() {
 }
 #
 #}}}
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
