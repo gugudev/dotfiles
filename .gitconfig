@@ -1,0 +1,41 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+name = Gustavo Fe
+	email = gugudeveloper@gmail.com
+[alias]
+	co = checkout
+	b = branch
+	ci = commit
+	st = status
+	ps = push
+	pl = pull
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[push]
+	default = current
+
+# diff-so-fancy
+# https://github.com/so-fancy/diff-so-fancy
+# brew install diff-so-fancy
+[core]
+	pager = diff-so-fancy | less --tabs=4 -RFX
+[color]
+	ui = true
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[color "diff"]
+	meta = blue
+	frag = magenta bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+[pull]
+	ff = only # addresses https://stackoverflow.com/a/62653694/1575238

@@ -34,7 +34,7 @@ task :install_config_files => [:install_pure_prompt] do
     else
       FileUtils.ln_s(path, dest_path, force: true)
     end
-  en
+  end
 
   log "To apply the new .zshrc settings, execute `source ~/.zshrc`."
 end
