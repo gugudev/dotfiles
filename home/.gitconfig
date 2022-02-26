@@ -37,5 +37,3 @@ name = Gustavo Fe
 	old = red bold
 	new = green bold
 	whitespace = red reverse
-[pull]
-	ff = only # addresses https://stackoverflow.com/a/62653694/1575238
