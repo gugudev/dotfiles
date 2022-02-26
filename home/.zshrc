@@ -1,3 +1,11 @@
+ZSH_THEME=""
+
+# === Path variables === {{{
+
+MY_NOTES_PATH=/Users/gustavofe/Library/Mobile\ Documents/com~apple~CloudDocs/Documents/mynotes
+
+# }}}
+
 # === Zsh Settings === {{{
   # completion
   autoload -U compinit
@@ -37,10 +45,16 @@
 
 # === Prompt === {{{
 
-  export PURE_GIT_PULL=0
-  fpath+=$HOME/.zsh/pure
-  autoload -U promptinit && promptinit
-  prompt pure
+export PURE_GIT_PULL=0
+fpath+=$HOME/.zsh/pure
+autoload -U promptinit && promptinit
+
+zstyle :prompt:pure:git:branch color green
+
+# turn on git stash status
+zstyle :prompt:pure:git:stash show yes
+
+prompt pure
 
 # }}}
 
@@ -154,6 +168,8 @@ alias rg="rg $RIPGREP_ARGS"
 
 # Mydotfiles
 alias dot='cd ~/dotfiles'
+
+alias on='nvim $(find /Users/nate/Notes | grep md | fzf)'
 # }}}
 
 # === Functions === {{{
@@ -244,7 +260,7 @@ armageddon() {
 # -----------------------------------------------------------------------------
 
 mynotes() {
-  cd ~/Documents/mynotes && nvim .
+  cd $MY_NOTES_PATH && nvim .
 }
 
 #}}}
