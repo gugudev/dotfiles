@@ -35,6 +35,15 @@
   export CLICOLOR=1
 # }}}
 
+# === Prompt === {{{
+
+  export PURE_GIT_PULL=0
+  fpath+=$HOME/.zsh/pure
+  autoload -U promptinit && promptinit
+  prompt pure
+
+# }}}
+
 # === Helper Functions === {{{
 
   # Create a new named tmux session.
@@ -106,27 +115,29 @@
 # }}}
 
 # === Environment Variables === {{{
-# #Put it in .gugudevenv
-  export PATH="$HOME/.rbenv/bin:$PATH"
+# Put it in .gugudevenv
 
-  # Ripgrep
-  export RIPGREP_ARGS="--no-ignore-vcs --hidden --follow --smart-case --ignore-file-case-insensitive --ignore-file $HOME/.rgignore"
+# Homebrew
+export PATH="$HOME/.rbenv/bin:$PATH"
 
-  # Use Neovim as the default editor.
-  export VISUAL="nvim"
-  export EDITOR="nvim"
+# Ripgrep
+export RIPGREP_ARGS="--no-ignore-vcs --hidden --follow --smart-case --ignore-file-case-insensitive --ignore-file $HOME/.rgignore"
 
-  # In ClickUp: Settings > Apps
-  export CLICKUP_API_TOKEN=
+# Use Neovim as the default editor.
+export VISUAL="nvim"
+export EDITOR="nvim"
 
-  # https://id.getharvest.com/developers
-  export HARVEST_ACCOUNT_ID=
-  export HARVEST_ACCESS_TOKEN=
-  export GITHUB_API_TOKEN=
+# In ClickUp: Settings > Apps
+export CLICKUP_API_TOKEN=
 
-  # Alego DB credentials
-  export PG_USER=
-  export PG_PASS=
+# https://id.getharvest.com/developers
+export HARVEST_ACCOUNT_ID=
+export HARVEST_ACCESS_TOKEN=
+export GITHUB_API_TOKEN=
+
+# Alego DB credentials
+export PG_USER=
+export PG_PASS=
 # }}}
 
 # === Aliases === {{{
