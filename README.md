@@ -9,5 +9,4 @@
 ## Getting start
 
 - Clone the repo
-- Run the script in your terminal on the dotfiles folder: `./script/set_osx_defaults.sh`
-- Restart your computer
+- Run `rake install` in the dotfiles folder
