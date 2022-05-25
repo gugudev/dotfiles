@@ -1,8 +1,8 @@
 # This is Git's per-user configuration file.
 [user]
 # Please adapt and uncomment the following lines:
-name = Gustavo Fe
-	email = gugudeveloper@gmail.com
+	name = Gustavo Goffe
+	email = gustavo.fe@al.go.leg.br
 [alias]
 	co = checkout
 	b = branch

@@ -2,7 +2,7 @@ ZSH_THEME=""
 
 # === Path variables === {{{
 
-MY_NOTES_PATH=/Users/gustavofe/Library/Mobile\ Documents/com~apple~CloudDocs/Documents/mynotes
+MY_NOTES_PATH=/Users/gustavofe/Notes
 
 # }}}
 
@@ -49,6 +49,7 @@ export PURE_GIT_PULL=0
 fpath+=$HOME/.zsh/pure
 autoload -U promptinit && promptinit
 
+# show the branch name with green color.
 zstyle :prompt:pure:git:branch color green
 
 # turn on git stash status
@@ -116,6 +117,7 @@ prompt pure
   function getRequest() {
     curl -i -H "Accept: application/json" $1
   }
+
   # E.g postRequest localhost:3006/webhooks/twilio-incoming-sms-message '{"messageBody": "Hi"}'
   function postRequest() {
     curl \
@@ -126,13 +128,43 @@ prompt pure
       --data $2 \
       $1
   }
+
+  # Get a notification when some command complete.
+  notify() {
+    osascript -e 'display notification "Your command completed!"'
+  }
+
+  # My notes
+  function gg() {
+    dir=$(ls -d ~/Notes/**/*/ | fzf)
+    date=$(date +%m-%d-%Y)
+    printf 'Enter Note Title: '
+    read -r note_title
+    note_filename=${note_title// /_} # Replace spaces with dashes
+    note_filename=$(echo $note_filename | tr '[:upper:]' '[:lower:]') # Convert to lower case
+    note_filepath="$dir$note_filename.md"
+    touch $note_filepath
+    echo $note_title >> $note_filepath
+    echo "=" >> $note_filepath
+    echo "Created note: $note_filepath"
+    nvim $note_filepath
+  }
+
 # }}}
 
 # === Environment Variables === {{{
 # Put it in .gugudevenv
+source ~/.gugudevenv
 
-# Homebrew
+# Rbenv
 export PATH="$HOME/.rbenv/bin:$PATH"
+
+# Openssl 1.0 - to install old ruby versions
+export PATH="/usr/local/opt/openssl@1.0/bin:$PATH"
+
+#For compilers to find openssl@1.0 you may need to set:
+# export LDFLAGS="-L/usr/local/opt/openssl@1.0/lib"
+# export CPPFLAGS="-I/usr/local/opt/openssl@1.0/include"
 
 # Ripgrep
 export RIPGREP_ARGS="--no-ignore-vcs --hidden --follow --smart-case --ignore-file-case-insensitive --ignore-file $HOME/.rgignore"
@@ -152,6 +184,13 @@ export GITHUB_API_TOKEN=
 # Alego DB credentials
 export PG_USER=
 export PG_PASS=
+
+# Allow latest macOS versions to run multithreading.
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+
+# Increase memory usage for Node
+export NODE_OPTIONS=--max_old_space_size=4096
+
 # }}}
 
 # === Aliases === {{{
@@ -170,78 +209,58 @@ alias rg="rg $RIPGREP_ARGS"
 alias dot='cd ~/dotfiles'
 
 alias on='nvim $(find /Users/nate/Notes | grep md | fzf)'
+
+# Homebrew for x86 - must run under Rosetta
+alias ibrew='arch -x86_64 /usr/local/bin/brew'
+
+## Projects
+alias workspace='cd ~/Projects'
+
+alias gh='cd ~/Projects/github'
+alias labs='cd ~/Projects/labs'
+alias backstage='cd ~/Projects/backstage'
+alias sharegrid='cd ~/Projects/backstage/sharegrid'
+
+## Toptal
+alias toptal='cd ~/Projects/toptal'
+
+## Open new note
+alias on='nvim $(find /Users/gustavofe/Notes | grep md | fzf)'
+
+## Localhost rubocop
+alias lltrb='rubocop --format=simple --auto-correct'
+
 # }}}
 
 # === Functions === {{{
 
-# Hub3
+# Backstage
 #------------------------------------------------------------------------------
-## docker commands
-ddo() {
-  docker-compose run --rm --use-aliases web $*
-}
-
-gtplm() {
-  git pull origin master
-}
-
-ltrb() {
-  ddo bin/lint rb --fix
-}
-
-ltjs() {
-  bin/lint js --fix
-}
-
-ltcss() {
-  bin/lint css --fix
-}
-
-ltts() {
-  docker-compose run --rm --no-deps ci yarn run type-check
-}
-
-ltall() {
-  ltrb && ltjs && ltcss
-}
-
 ## projects
-h3() {
-  (cd ~/Projects/hub3/scripts/h3_cli && bundle exec ruby main.rb $*)
-}
 
-### Spoteasy
-h3sp() {
-  cd ~/Projects/hub3/spot_easy_website &&
+### Sharegrid
+runshare() {
+  cd ~/Projects/backstage/sharegrid &&
     tmux split-window -h -p 30 \; \
-      send-keys -t 1 'bin/docker_web_server' Enter \; \
-      split-window -v -p 60 \; \
-      send-keys -t 2 'bin/nextjs_dev_server' Enter \; \
-      split-window -v -p 60 \; \
-      send-keys -t 3 'bin/docker_sync' Enter \; \
+      send-keys -t 1 'elasticsearch' Enter \; \
+      split-window -v -p 90 \; \
+      send-keys -t 2 'docker-compose -f ./docker/docker-compose-dev.yml up' Enter \; \
+      split-window -v -p 90 \; \
+      send-keys -t 3 'bundle exec sidekiq -C ./config/sidekiq_queues.yml -e development' Enter \; \
+      split-window -v -p 90 \; \
+      send-keys -t 4 'nvm use v16.5.0; yarn dev' Enter \; \
+      split-window -v -p 50 \; \
+      send-keys -t 5 'REACT_DEVTOOLS=1 bundle exec rails s -p 3000' Enter \; \
       select-pane -t 0 \; \
       split-window -v -p 40 \; \
-      send-keys -t 1 'ddo bash' Enter \; \
       split-window -v -p 50 \; \
-      send-keys -t 2 'ddo rails c' Enter \; \
+      send-keys -t 2 'rails c' Enter \; \
       split-window -v -p 50 \; \
       select-pane -t 0 \; \
       send-keys -t 0 'nvim .' Enter \;
 }
 
-### New wave
-h3nw() {
-  cd ~/Projects/hub3/new_wave_website &&
-    tmux split-window -v -p 30 \; \
-      split-window -h -p 50 \; \
-      send-keys -t 2 'bin/docker_web_server' Enter \; \
-      split-window -v -p 70 \; \
-      send-keys -t 3 'bin/webpack_dev_server' Enter \; \
-      split-window -v -p 50 \; \
-      send-keys -t 4 'bin/docker_sync' Enter \; \
-      select-pane -t 0;
-}
-
+source /Users/gustavofe/Projects/backstage/sharegrid/.env.development
 
 # Docker
 #------------------------------------------------------------------------------
@@ -274,3 +293,8 @@ eval "$(rbenv init -)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # }}}
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
